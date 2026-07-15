@@ -1,0 +1,99 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: resolvex-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: resolvex
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - resolvex-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: resolvex-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      MONGO_URI: mongodb://mongo:27017/resolvex
+    depends_on:
+      mongo:
+        condition: service_healthy
+    volumes:
+      - backend_uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - resolvex-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
+    container_name: resolvex-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - resolvex-net
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: resolvex-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - certbot_www:/var/www/certbot:ro
+      - certbot_certs:/etc/letsencrypt:ro
+    depends_on:
+      frontend:
+        condition: service_healthy
+    networks:
+      - resolvex-net
+
+  # Uncomment once you're ready to issue Let's Encrypt certificates.
+  # See DEPLOYMENT.md for the full first-run/renewal workflow.
+  # certbot:
+  #   image: certbot/certbot
+  #   container_name: resolvex-certbot
+  #   volumes:
+  #     - certbot_www:/var/www/certbot
+  #     - certbot_certs:/etc/letsencrypt
+  #   entrypoint: >
+  #     sh -c "trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done"
+
+networks:
+  resolvex-net:
+    driver: bridge
+
+volumes:
+  mongo_data:
+  backend_uploads:
+  certbot_www:
+  certbot_certs:
