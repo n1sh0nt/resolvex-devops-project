@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Users, FileText, Star, TrendingUp, Download, FileSpreadsheet } from 'lucide-react';
-import '../utils/chartSetup';
-import { analyticsApi } from '../api/endpoints';
-import StatCard from '../components/common/StatCard';
-import Spinner from '../components/common/Spinner';
-import MonthlyTrendChart from '../components/charts/MonthlyTrendChart';
-import StatusPieChart from '../components/charts/StatusPieChart';
-import DepartmentBarChart from '../components/charts/DepartmentBarChart';
+import '../../utils/chartSetup';
+import { analyticsApi } from '../../api/endpoints';
+import StatCard from '../../components/common/StatCard';
+import Spinner from '../../components/common/Spinner';
+import MonthlyTrendChart from '../../components/charts/MonthlyTrendChart';
+import StatusPieChart from '../../components/charts/StatusPieChart';
+import DepartmentBarChart from '../../components/charts/DepartmentBarChart';
 
 export default function AdminDashboardPage() {
   const [data, setData] = useState(null);
