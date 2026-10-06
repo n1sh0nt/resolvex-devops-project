@@ -29,6 +29,7 @@ import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
 
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminComplaintsPage from './pages/admin/AdminComplaintsPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
 import AdminDepartmentsPage from './pages/admin/AdminDepartmentsPage';
 import AdminFeedbackPage from './pages/admin/AdminFeedbackPage';
@@ -71,6 +72,7 @@ export default function App() {
                 {/* Admin */}
                 <Route element={<RoleRoute roles={['admin']} />}>
                   <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+                  <Route path="/admin/complaints" element={<AdminComplaintsPage />} />
                   <Route path="/admin/users" element={<AdminUsersPage />} />
                   <Route path="/admin/departments" element={<AdminDepartmentsPage />} />
                   <Route path="/admin/feedback" element={<AdminFeedbackPage />} />

@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   FilePlus2,
   History,
+  ClipboardList,
   UserCog,
   Building2,
   MessageSquareText,
@@ -35,7 +36,7 @@ const navByRole = {
   ],
   admin: [
     { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard, end: true },
-    { to: '/complaints', label: 'All Complaints', icon: History },
+    { to: '/admin/complaints', label: 'Complaint Management', icon: ClipboardList },
     { to: '/admin/users', label: 'Manage Users', icon: UserCog },
     { to: '/admin/departments', label: 'Departments', icon: Building2 },
     { to: '/admin/feedback', label: 'Feedback', icon: MessageSquareText },

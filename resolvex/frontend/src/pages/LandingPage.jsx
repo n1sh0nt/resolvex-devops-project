@@ -51,7 +51,7 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(200,155,60,0.12),_transparent_55%)]" />
-        <div className="mx-auto grid max-w-6xl gap-12 px-5 py-16 sm:py-24 lg:grid-cols-2 lg:items-center">
+        <div className="relative z-10 mx-auto grid max-w-6xl gap-12 px-5 py-16 sm:py-24 lg:grid-cols-2 lg:items-center">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-brass-200 bg-brass-50 px-3 py-1 text-xs font-semibold text-brass-600">
               <Sparkles size={13} /> Built for college campuses
@@ -68,9 +68,10 @@ export default function LandingPage() {
               <Link to="/register" className="btn-accent">
                 Get started <ArrowRight size={16} />
               </Link>
-              <Link to="/login" className="btn-outline">
+
+              <a href="/login" className="btn-outline">
                 I already have an account
-              </Link>
+             </a>
             </div>
             <div className="mt-10 flex items-center gap-8 text-sm text-ink-400">
               <div>
