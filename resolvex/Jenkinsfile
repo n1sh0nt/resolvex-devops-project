@@ -1,0 +1,74 @@
+
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    environment {
+        PROJECT_DIR = 'resolvex'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo 'Source code is checked out from GitHub.'
+                sh 'pwd'
+                sh 'git rev-parse --short HEAD'
+            }
+        }
+
+        stage('Frontend Dependencies') {
+            steps {
+                dir("${PROJECT_DIR}/frontend") {
+                    sh 'npm ci --no-audit --no-fund'
+                }
+            }
+        }
+
+        stage('Frontend Build') {
+            steps {
+                dir("${PROJECT_DIR}/frontend") {
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Backend Dependencies') {
+            steps {
+                dir("${PROJECT_DIR}/backend") {
+                    sh 'npm ci --no-audit --no-fund'
+                }
+            }
+        }
+
+        stage('Backend Syntax Validation') {
+            steps {
+                dir("${PROJECT_DIR}/backend") {
+                    sh '''
+                        node --check server.js
+                        find src seed -type f -name "*.js" \
+                            -exec node --check {} \\;
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'ResolveX CI pipeline completed successfully!'
+        }
+
+        failure {
+            echo 'ResolveX CI pipeline failed. Check the console output.'
+        }
+
+        always {
+            echo 'ResolveX CI pipeline execution finished.'
+        }
+    }
+}
